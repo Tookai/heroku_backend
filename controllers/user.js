@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, Like, Comment, Post } = require("../models");
 
 //
 // Create a new user
@@ -221,7 +221,10 @@ exports.updateUserCredentials = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     await User.destroy({ where: { id: req.params.id } });
-    res.status(200).json("L'utilisateur a été supprimé.");
+    await Post.destroy({ where: { userId: req.params.id } });
+    await Like.destroy({ where: { userId: req.params.id } });
+    await Comment.destroy({ where: { userId: req.params.id } });
+    res.status(200).json("L'utilisateur a été supprimé ainsi que ses posts, likes et comments.");
   } catch (err) {
     res.status(500).json(err);
   }

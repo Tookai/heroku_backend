@@ -49,7 +49,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 //
 const models = require("./models");
 models.sequelize.sync().then(() => {
-  app.listen(process.env.PORT || 5500, () => {
+  app.listen(/* process.env.PORT ||  */5500, () => {
     console.log("===> Backend server is running! <===");
   });
 });

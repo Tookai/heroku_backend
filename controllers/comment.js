@@ -9,7 +9,6 @@ exports.createComment = async (req, res) => {
   const content = req.body.content;
   try {
     const comment = await Comment.create({ postId, userId, content });
-    await Post.increment({ comments: +1 }, { where: { id: postId } });
     res.status(200).json(comment);
   } catch (err) {
     res.status(500).json(err);
@@ -23,7 +22,6 @@ exports.deleteComment = async (req, res) => {
   const postId = req.params.postId;
   try {
     await Comment.destroy({ where: { id: commentId } });
-    await Post.increment({ comments: -1 }, { where: { id: postId } });
     res.status(200).json(`Commentaire ${commentId} supprimé.`);
   } catch (err) {
     res.status(500).json(err);

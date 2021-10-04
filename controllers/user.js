@@ -113,33 +113,18 @@ exports.updateUserInfos = async (req, res) => {
 exports.updateUserAvatar = async (req, res) => {
   console.log(req);
   try {
-    if (!req.file) {
-      const user = req.body;
-      await User.update(
-        {
-          avatar: user.avatarPic,
+    const user = req.body;
+    await User.update(
+      {
+        avatar: user.avatarPic,
+      },
+      {
+        where: {
+          id: req.params.id,
         },
-        {
-          where: {
-            id: req.params.id,
-          },
-        }
-      );
-      res.status(200).json(`L'utilisateur a été mis à jour.`);
-    } else {
-      console.log(req);
-      await User.update(
-        {
-          avatar: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-        },
-        {
-          where: {
-            id: req.params.id,
-          },
-        }
-      );
-      res.status(200).json(`L'utilisateur a été mis à jour.`);
-    }
+      }
+    );
+    res.status(200).json(`L'utilisateur a été mis à jour.`);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -150,31 +135,17 @@ exports.updateUserAvatar = async (req, res) => {
 exports.updateUserCover = async (req, res) => {
   const user = req.body;
   try {
-    if (!req.file) {
-      await User.update(
-        {
-          cover: user.coverPic,
+    await User.update(
+      {
+        cover: user.coverPic,
+      },
+      {
+        where: {
+          id: req.params.id,
         },
-        {
-          where: {
-            id: req.params.id,
-          },
-        }
-      );
-      res.status(200).json(`L'utilisateur a été mis à jour.`);
-    } else {
-      await User.update(
-        {
-          cover: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-        },
-        {
-          where: {
-            id: req.params.id,
-          },
-        }
-      );
-      res.status(200).json(`L'utilisateur a été mis à jour.`);
-    }
+      }
+    );
+    res.status(200).json(`L'utilisateur a été mis à jour.`);
   } catch (err) {
     res.status(500).json(err);
   }

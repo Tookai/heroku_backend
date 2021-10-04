@@ -9,7 +9,6 @@ exports.addLike = async (req, res) => {
   const userId = req.params.userId;
   try {
     await Like.create({ postId, userId });
-    await Post.increment({ likes: +1 }, { where: { id: postId } });
     res.status(200).json(`User ${userId} liked post ${postId}`);
   } catch (err) {
     res.status(500).json(err);
@@ -23,7 +22,6 @@ exports.removeLike = async (req, res) => {
   const userId = req.params.userId;
   try {
     await Like.destroy({ where: { postId, userId } });
-    await Post.increment({ likes: -1 }, { where: { id: postId } });
     res.status(200).json(`User ${userId} disliked post ${postId}`);
   } catch (err) {
     res.status(500).json(err);

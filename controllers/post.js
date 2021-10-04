@@ -10,13 +10,8 @@ exports.createPost = async (req, res) => {
   const image = post.image;
   const topic = post.topic;
   try {
-    if (!req.file) {
-      const newPost = await Post.create({ userId, desc, image, topic });
-      res.status(200).json(newPost);
-    } else {
-      const newPost = await Post.create({ ...post, image: `${req.protocol}://${req.get("host")}/images/${req.file.filename}` });
-      res.status(200).json(newPost);
-    }
+    const newPost = await Post.create({ userId, desc, image, topic });
+    res.status(200).json(newPost);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -74,30 +69,17 @@ exports.updateOne = async (req, res) => {
   const image = p.image;
   const topic = p.topic;
   try {
-    if (!req.file) {
-      await Post.update(
-        {
-          desc,
-          image,
-          topic,
-        },
-        {
-          where: { id: req.params.id },
-        }
-      );
-      res.status(200).json("Le post a été mis à jour.");
-    } else {
-      await Post.update(
-        {
-          ...p,
-          image: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-        },
-        {
-          where: { id: req.params.id },
-        }
-      );
-      res.status(200).json("Le post a été mis à jour.");
-    }
+    await Post.update(
+      {
+        desc,
+        image,
+        topic,
+      },
+      {
+        where: { id: req.params.id },
+      }
+    );
+    res.status(200).json("Le post a été mis à jour.");
   } catch (err) {
     res.status(500).json(err);
   }

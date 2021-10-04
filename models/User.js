@@ -61,6 +61,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return User;
 };
-
-
-// https://picsum.photos/750/320

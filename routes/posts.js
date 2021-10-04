@@ -1,11 +1,10 @@
 const router = require("express").Router();
-const multer = require("../middlewares/multer");
 
 const postCtrl = require("../controllers/post");
 
 //
 // Create a new post
-router.post("/post", multer, postCtrl.createPost);
+router.post("/post", postCtrl.createPost);
 
 //
 // Select all posts
@@ -25,7 +24,7 @@ router.get("/topic/:topic", postCtrl.selectByTopic);
 
 //
 // Update one post
-router.put("/update/:id", multer, postCtrl.updateOne);
+router.put("/update/:id", postCtrl.updateOne);
 
 //
 // Delete one post

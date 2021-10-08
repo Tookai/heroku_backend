@@ -171,8 +171,8 @@ exports.updateUserCredentials = async (req, res) => {
       const newHashedPw = await bcrypt.hash(newPw, 10);
       await User.update(
         {
-          email: email !== null ? email : u[0].email,
-          password: newPw !== null ? newHashedPw : u[0].password,
+          email: email,
+          password: newHashedPw,
         },
         {
           where: {

@@ -13,5 +13,6 @@ https://groupomania-social.herokuapp.com/
 
 Vous pourrez retrouver le frontend de cette application ici : 
 https://github.com/Tookai/heroku_frontend
+
 Le frontend de cette application est lui aussi hosté sur heroku et peut se trouver à cette adresse : 
 https://groupomania-frontend.herokuapp.com/

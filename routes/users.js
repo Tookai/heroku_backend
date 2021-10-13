@@ -1,5 +1,4 @@
 const router = require("express").Router();
-
 // ---------------------------------------
 const userCtrl = require("../controllers/user");
 // ---------------------------------------
@@ -31,10 +30,6 @@ router.put("/update/avatar/:id", userCtrl.updateUserAvatar);
 //
 // Update one user COVER
 router.put("/update/cover/:id", userCtrl.updateUserCover);
-
-//
-// Update one user CREDENTIALS
-router.put("/update/credentials/:id", userCtrl.updateUserCredentials);
 
 //
 // Delete one user

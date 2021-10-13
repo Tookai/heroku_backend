@@ -152,42 +152,6 @@ exports.updateUserCover = async (req, res) => {
 };
 
 //
-// Update one user CREDENTIALS
-exports.updateUserCredentials = async (req, res) => {
-  const user = req.body;
-  const email = user.email;
-  const oldPw = user.oldPw;
-  const newPw = user.newPw;
-
-  try {
-    const u = await User.findAll({ where: { id: req.params.id } });
-    const validPw = await bcrypt.compare(oldPw, u[0].password);
-
-    if (!validPw) {
-      res.status(405).json("Le mot de passe est incorrect.");
-    }
-
-    if (validPw) {
-      const newHashedPw = await bcrypt.hash(newPw, 10);
-      await User.update(
-        {
-          email: email,
-          password: newHashedPw,
-        },
-        {
-          where: {
-            id: req.params.id,
-          },
-        }
-      );
-      res.status(200).json("Mise a jour effectuée.");
-    }
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
-//
 // Delete one user
 exports.deleteUser = async (req, res) => {
   try {

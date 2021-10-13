@@ -10,8 +10,12 @@ exports.createPost = async (req, res) => {
   const image = post.image;
   const topic = post.topic;
   try {
-    const newPost = await Post.create({ userId, desc, image, topic });
-    res.status(200).json(newPost);
+    if (userId == req.user.userId) {
+      const newPost = await Post.create({ userId, desc, image, topic });
+      res.status(200).json(newPost);
+    } else {
+      res.status(404).json(`Vous ne pouvez pas faire ça.`);
+    }
   } catch (err) {
     res.status(500).json(err);
   }

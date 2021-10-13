@@ -46,8 +46,6 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-// { user, token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, "Super_Secret_Key", { expiresIn: "3h" }) }
-
 //
 // Select all users
 exports.selectAllUsers = async (req, res) => {
@@ -80,28 +78,32 @@ exports.selectOneUser = async (req, res) => {
 exports.updateUserInfos = async (req, res) => {
   const user = req.body;
   try {
-    const updatedUser = await User.update(
-      {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        birthday: user.birthday,
-        city: user.city,
-        fromCity: user.fromCity,
-        relationship: user.relationship,
-        scholarship: user.scholarship,
-        job: user.job,
-      },
-      {
-        where: {
-          id: req.params.id,
+    if (req.params.id == req.user.userId || req.user.isAdmin) {
+      const updatedUser = await User.update(
+        {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          birthday: user.birthday,
+          city: user.city,
+          fromCity: user.fromCity,
+          relationship: user.relationship,
+          scholarship: user.scholarship,
+          job: user.job,
         },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+      if (!updatedUser[0]) {
+        res.status(404).json("Cet utilisateur n'existe pas.");
       }
-    );
-    if (!updatedUser[0]) {
-      res.status(404).json("Cet utilisateur n'existe pas.");
-    }
-    if (updatedUser[0]) {
-      res.status(200).json(`L'utilisateur a été mis à jour.`);
+      if (updatedUser[0]) {
+        res.status(200).json(`L'utilisateur a été mis à jour.`);
+      }
+    } else {
+      res.status(404).json("Vous ne pouvez pas faire ça.");
     }
   } catch (err) {
     res.status(500).json(err);
@@ -111,20 +113,23 @@ exports.updateUserInfos = async (req, res) => {
 //
 // Update one user AVATAR
 exports.updateUserAvatar = async (req, res) => {
-  console.log(req);
+  const user = req.body;
   try {
-    const user = req.body;
-    await User.update(
-      {
-        avatar: user.avatarPic,
-      },
-      {
-        where: {
-          id: req.params.id,
+    if (req.params.id == req.user.userId || req.user.isAdmin) {
+      await User.update(
+        {
+          avatar: user.avatarPic,
         },
-      }
-    );
-    res.status(200).json(`L'utilisateur a été mis à jour.`);
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+      res.status(200).json(`L'avatar a été mis à jour.`);
+    } else {
+      res.status(404).json("Vous ne pouvez pas faire ça.");
+    }
   } catch (err) {
     res.status(500).json(err);
   }
@@ -135,17 +140,21 @@ exports.updateUserAvatar = async (req, res) => {
 exports.updateUserCover = async (req, res) => {
   const user = req.body;
   try {
-    await User.update(
-      {
-        cover: user.coverPic,
-      },
-      {
-        where: {
-          id: req.params.id,
+    if (req.params.id == req.user.userId || req.user.isAdmin) {
+      await User.update(
+        {
+          cover: user.coverPic,
         },
-      }
-    );
-    res.status(200).json(`L'utilisateur a été mis à jour.`);
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+      res.status(200).json(`La cover a été mis à jour.`);
+    } else {
+      res.statuts(404).json(`Vous ne pouvez pas faire ça.`);
+    }
   } catch (err) {
     res.status(500).json(err);
   }
@@ -155,11 +164,15 @@ exports.updateUserCover = async (req, res) => {
 // Delete one user
 exports.deleteUser = async (req, res) => {
   try {
-    await User.destroy({ where: { id: req.params.id } });
-    await Post.destroy({ where: { userId: req.params.id } });
-    await Like.destroy({ where: { userId: req.params.id } });
-    await Comment.destroy({ where: { userId: req.params.id } });
-    res.status(200).json("L'utilisateur a été supprimé ainsi que ses posts, likes et comments.");
+    if (req.params.id == req.user.userId || req.user.isAdmin) {
+      await User.destroy({ where: { id: req.params.id } });
+      await Post.destroy({ where: { userId: req.params.id } });
+      await Like.destroy({ where: { userId: req.params.id } });
+      await Comment.destroy({ where: { userId: req.params.id } });
+      res.status(200).json("L'utilisateur a été supprimé ainsi que ses posts, likes et comments.");
+    } else {
+      res.statuts(404).json(`Vous ne pouvez pas faire ça.`);
+    }
   } catch (err) {
     res.status(500).json(err);
   }

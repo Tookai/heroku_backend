@@ -2,6 +2,8 @@ const router = require("express").Router();
 // ---------------------------------------
 const userCtrl = require("../controllers/user");
 // ---------------------------------------
+const auth = require("../middlewares/auth");
+// ---------------------------------------
 
 //
 // Create a new user
@@ -13,27 +15,27 @@ router.post("/login", userCtrl.loginUser);
 
 //
 // Select all users
-router.get("/all", userCtrl.selectAllUsers);
+router.get("/all", auth, userCtrl.selectAllUsers);
 
 //
 // Select one user
-router.get("/:id", userCtrl.selectOneUser);
+router.get("/:id", auth, userCtrl.selectOneUser);
 
 //
 // Update one user INFOS
-router.put("/update/infos/:id", userCtrl.updateUserInfos);
+router.put("/update/infos/:id", auth, userCtrl.updateUserInfos);
 
 //
 // Update one user AVATAR
-router.put("/update/avatar/:id", userCtrl.updateUserAvatar);
+router.put("/update/avatar/:id", auth, userCtrl.updateUserAvatar);
 
 //
 // Update one user COVER
-router.put("/update/cover/:id", userCtrl.updateUserCover);
+router.put("/update/cover/:id", auth, userCtrl.updateUserCover);
 
 //
 // Delete one user
-router.delete("/delete/:id", userCtrl.deleteUser);
+router.delete("/delete/:id", auth, userCtrl.deleteUser);
 
 //
 //
